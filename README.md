@@ -1,146 +1,363 @@
-
-# Отчет по лабораторной работе №3
-## Тема: «Разработка простой темы для CMS WordPress»
-
-**Студент:** Кристева Ирина  
-**Предмет:** CMS  
- 
+#  Лабораторная работа: CMS WordPress
 
 ---
 
-## 1. Цель работы
-Научиться создавать собственную тему WordPress, разобраться в её минимальной структуре и принципах работы шаблонов.
+
+##  Цель работы
+
+Изучение архитектуры CMS WordPress и получение практических навыков создания и настройки темы, страниц, меню и функциональности сайта.
 
 ---
 
-## 2. Среда выполнения
-* **ОС:** Windows 10 (XAMPP / OpenServer)
-* **Редактор:** VS Code
-* **CMS:** WordPress (локальная установка)
+##  Используемое окружение
+
+- CMS: WordPress (локальный сервер XAMPP)
+- Редактор кода: VS Code
+- Тема: кастомная (Movie Theme)
+- Язык: PHP, HTML, CSS
+- Плагины: Classic Editor, Contact Form 7
 
 ---
 
-## 3. Ход работы
+##  Этапы выполнения работы
 
-### Шаг 1. Создание структуры папок и файлов
-В каталоге `/wp-content/themes/` создана папка темы `usm-theme`. В ней созданы файлы, согласно требованиям иерархии шаблонов WP:
+---
 
-> **📸 МЕСТО ДЛЯ СКРИНШОТА №1** > *(Скриншот открытой папки темы в VS Code со всеми файлами)*
+### Шаг 1 — Подготовка среды
 
-### Шаг 2. Описание темы (style.css)
-Файл необходим для идентификации темы системой.
+- Установлена локальная среда WordPress (XAMPP)
+- Проект размещён по пути: /wp_lab2/
 
-```css
+- Включён режим отладки:
+
+```php
+define('WP_DEBUG', true);
+```
+
+### Шаг 2 — Создание темы оформления
+Создана пользовательская тема:
+
+wp-content/themes/usm-theme/
+
+Структура темы
+usm-theme/
+├── style.css
+├── index.php
+├── functions.php
+├── header.php
+├── footer.php
+├── sidebar.php
+├── single.php
+├── page.php
+└── screenshot.png
+
+<img width="188" height="371" alt="image" src="https://github.com/user-attachments/assets/b10628f5-3958-42bb-89ee-ca6da9434466" />
+
+### Шаг 3 — Стили темы (style.css)
+
+Файл style.css содержит:
+
+метаданные темы (обязательный блок WordPress)
+основные стили оформления интерфейса
+адаптивную сетку карточек фильмов
+Основные особенности дизайна:
+светлая цветовая схема
+карточный интерфейс (movie cards)
+CSS Grid для отображения фильмов
+hover-анимации
+адаптивная верстка
+
+```
 /*
 Theme Name: USM Theme
 Author: Irina Cristeva
-Description: Лабораторная работа по разработке темы WP
 Version: 1.0
+Description: Simple WordPress theme for lab work
 */
 
-body { font-family: Segoe UI, sans-serif; line-height: 1.5; color: #333; }
-.wrapper { max-width: 1000px; margin: 0 auto; display: flex; }
-header, footer { background: #222; color: #fff; padding: 1.5rem; text-align: center; }
-article { margin-bottom: 2rem; border-bottom: 1px solid #ccc; padding-bottom: 1rem; }
-aside { width: 30%; background: #f4f4f4; padding: 20px; }
-main { width: 70%; padding: 20px; }
-```
+html, body {
+    height: 100%;
+    margin: 0;
+    font-family: Arial, sans-serif;
+    background: #f5f5f5;
+}
 
-### Шаг 3. Подключение функций (functions.php)
-Регистрация стилей и поддержка меню/виджетов.
+body {
+    display: flex;
+    flex-direction: column;
+}
+
+header nav ul {
+    list-style: none;
+    display: flex;
+    gap: 15px;
+    padding: 0;
+}
+
+header nav a {
+    text-decoration: none;
+    color: #222;
+    font-weight: bold;
+}
+
+header nav a:hover {
+    color: #4caf50;
+}
+
+.container {
+    width: 80%;
+    margin: auto;
+    flex: 1;
+}
+
+header {
+    background: #e8f5e9;
+    padding: 15px 0;
+}
+
+header .container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+nav ul {
+    list-style: none;
+    display: flex;
+    gap: 20px;
+    padding: 0;
+    margin: 0;
+}
+
+nav ul li a {
+    text-decoration: none;
+    color: #222;
+    font-weight: bold;
+}
+
+nav ul li a:hover {
+    opacity: 0.7;
+}
+
+.post {
+    background: white;
+    padding: 15px;
+    margin: 10px 0;
+    border-radius: 8px;
+}
+
+.movies-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+}
+
+.movie-card {
+    background: white;
+    padding: 10px;
+    border-radius: 10px;
+    text-align: center;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.movie-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+}
+
+.movie-card img {
+    width: 100%;
+    border-radius: 8px;
+}
+
+.movie-card a {
+    text-decoration: none;
+    color: black;
+}
+
+.movie-page {
+    text-align: center;
+}
+
+.movie-big img {
+    width: 300px;
+    border-radius: 10px;
+    margin-bottom: 20px;
+}
+
+.movie-content {
+    max-width: 600px;
+    margin: auto;
+}
+
+.layout {
+    display: block;
+    gap: 20px;
+    align-items: flex-start;
+}
+
+.movies-grid {
+    flex: 3;
+}
+
+.sidebar {
+    flex: 1;
+    background: white;
+    padding: 15px;
+    border-radius: 10px;
+    margin-top: 20px;
+}
+
+footer {
+    background: #e8f5e9;
+    text-align: center;
+    padding: 15px;
+    margin-top: 30px;
+}
+```
+<img width="2408" height="1310" alt="Снимок экрана 2026-04-01 221442" src="https://github.com/user-attachments/assets/a416b387-6b64-47b3-bc51-086dab6b51c1" />
+
+
+### Шаг 4 — functions.php
+
+Файл отвечает за подключение и расширение возможностей темы.
 
 ```php
 <?php
-function usm_theme_scripts() {
-    wp_enqueue_style('main-styles', get_stylesheet_uri());
-}
-add_action('wp_enqueue_scripts', 'usm_theme_scripts');
 
-add_action('after_setup_theme', function() {
+function theme_setup() {
     add_theme_support('title-tag');
     add_theme_support('post-thumbnails');
-});
+
+    register_nav_menus([
+        'primary' => 'Primary Menu'
+    ]);
+}
+add_action('after_setup_theme', 'theme_setup');
+
+function theme_styles() {
+    wp_enqueue_style('style', get_stylesheet_uri());
+}
+add_action('wp_enqueue_scripts', 'theme_styles');
+
+function modify_query($query) {
+    if (!is_admin() && $query->is_main_query()) {
+        $query->set('orderby', 'title');
+        $query->set('order', 'ASC');
+    }
+}
+add_action('pre_get_posts', 'modify_query');
+
+?>
 ```
 
-### Шаг 4. Шаблоны Header и Footer
-Разделение страницы на логические части.
+Реализовано:
+подключение стилей темы
+регистрация меню навигации
+поддержка миниатюр записей
+изменение сортировки записей
 
-**header.php:**
+<img width="613" height="779" alt="Снимок экрана 2026-04-01 221420" src="https://github.com/user-attachments/assets/2285168c-0d4d-4f2c-9199-38cb7ac89559" />
+
+
+### Шаг 5 — header.php
+Файл отвечает за верхнюю часть сайта (шапку и меню).
+
 ```php
 <!DOCTYPE html>
-<html <?php language_attributes(); ?>>
+<html>
 <head>
-    <meta charset="<?php bloginfo('charset'); ?>">
+    <title><?php wp_title(); ?></title>
     <?php wp_head(); ?>
 </head>
-<body <?php body_class(); ?>>
+
+<body>
+
 <header>
-    <h1><?php bloginfo('name'); ?></h1>
-    <p><?php bloginfo('description'); ?></p>
+    <div class="container">
+
+        <h2>🎬 My Movie Theme</h2>
+
+        <nav>
+            <?php
+            wp_nav_menu([
+                'theme_location' => 'primary',
+                'container' => false
+            ]);
+            ?>
+        </nav>
+
+    </div>
 </header>
 ```
+<img width="1641" height="113" alt="image" src="https://github.com/user-attachments/assets/03f8d741-17a0-4cca-8214-4d599915052a" />
 
-**footer.php:**
-```php
-<footer>
-    <p>&copy; <?php echo date('Y'); ?> <?php bloginfo('name'); ?> - Irina Cristeva</p>
-</footer>
-<?php wp_footer(); ?>
-</body>
-</html>
+
+### Шаг 6 — Основная логика WordPress
+В теме используются стандартные шаблоны:
+
+index.php — основной fallback-шаблон
+single.php — отдельная запись
+page.php — статическая страница
+header.php — шапка сайта
+footer.php — подвал сайта
+Подключение частей шаблона:
+```
+get_header();
+get_footer();
+get_sidebar();
 ```
 
-### Шаг 5. Главный шаблон (index.php)
-Реализация "Цикла WordPress" (The Loop) для вывода контента.
 
-```php
-<?php get_header(); ?>
-<div class="wrapper">
-    <main>
-        <?php if (have_posts()) : while (have_posts()) : the_post(); ?>
-            <article>
-                <h2><a href="<?php the_permalink(); ?>"><?php the_title(); ?></a></h2>
-                <small>Опубликовано: <?php the_time('F jS, Y'); ?> в категории <?php the_category(', '); ?></small>
-                <div><?php the_excerpt(); ?></div>
-            </article>
-        <?php endwhile; else : ?>
-            <p>Контент не найден.</p>
-        <?php endif; ?>
-    </main>
-    <?php get_sidebar(); ?>
-</div>
-<?php get_footer(); ?>
-```
+### Шаг 7 — Структура сайта
 
----
+В рамках работы создан сайт — мини-каталог фильмов.
 
-## 4. Активация темы
-После создания всех файлов тема появилась в панели управления WordPress. Я добавила файл `screenshot.png` (1200x900) для корректного превью.
+Реализовано:
 
-> **📸 МЕСТО ДЛЯ СКРИНШОТА №2** > *(Скриншот из "Внешний вид -> Темы", где видна ваша тема с картинкой-превью)*
+главная страница с сеткой фильмов
+страницы "О нас"
+карточки фильмов с изображениями и описанием
+единый стиль оформления
 
----
+<img width="1984" height="1300" alt="Снимок экрана 2026-04-01 220028" src="https://github.com/user-attachments/assets/25a4e252-e7d8-4434-bf43-08d9ecd80ef0" />
+<img width="1927" height="1305" alt="Снимок экрана 2026-04-01 220015" src="https://github.com/user-attachments/assets/14beb41c-ef85-4569-9169-03a3ad11d8bc" />
+<img width="1968" height="1302" alt="Снимок экрана 2026-04-01 215937" src="https://github.com/user-attachments/assets/5ce8fb24-062b-4101-bf1d-05fdde7675fc" />
+<img width="2046" height="1318" alt="Снимок экрана 2026-04-01 215952" src="https://github.com/user-attachments/assets/ecdf32e9-830d-4561-bbae-6f7f79117898" />
+<img width="1960" height="1304" alt="Снимок экрана 2026-04-01 220003" src="https://github.com/user-attachments/assets/57095f8d-6dd1-43ca-84be-ddf62c313a49" />
 
-## 5. Результат работы
-Тема корректно отображает записи из базы данных, подключает стили и разделяет контент на колонки.
 
-> **📸 МЕСТО ДЛЯ СКРИНШОТА №3** > *(Скриншот главной страницы сайта в браузере)*
+### Шаг 8 — Навигация
 
----
+Создано меню:
 
-## 6. Контрольные вопросы
-1. **Какие файлы обязательны?** `style.css` и `index.php`.
-2. **Как вывести название сайта?** С помощью функции `bloginfo('name')`.
-3. **Для чего нужен functions.php?** Для регистрации функций, стилей и скриптов темы.
+Главная
+О нас
 
----
+Меню назначено через админ-панель WordPress:
 
-## Вывод
-В ходе работы была разработана тема WordPress по стандарту иерархии шаблонов. Изучена работа функций `wp_head()`, `wp_footer()` и основного цикла вывода записей.
-```
+Внешний вид → Меню
 
-### Что тебе нужно сделать (мини-чеклист):
-1. **Скриншот 1:** Папка с файлами в VS Code.
-2. **Скриншот 2:** Список тем в админке WordPress.
-3. **Скриншот 3:** Твой сайт в браузере (как он выглядит с этой темой).
-4. **Важно:** Если хочешь, чтобы в админке была красивая картинка у темы (как в примере), закинь в папку любой файл `screenshot.png`.
+<img width="613" height="779" alt="Снимок экрана 2026-04-01 221420" src="https://github.com/user-attachments/assets/3168bd88-c494-4663-aa88-35aefb5642e8" />
+
+
+### Шаг 9 — Плагины
+
+Установлены и протестированы:
+
+Classic Editor — классический редактор записей
+Contact Form 7 — форма обратной связи
+
+### В ходе лабораторной работы была изучена архитектура CMS WordPress и реализована кастомная тема оформления.
+
+В результате:
+
+создана структура темы WordPress
+подключены стили и функциональность через functions.php
+реализована навигация и страницы сайта
+установлены и протестированы плагины
+проверена работоспособность сайта
+
+Цель работы достигнута. Получен практический опыт разработки и настройки темы WordPress.
+
+
